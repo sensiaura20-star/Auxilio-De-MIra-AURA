@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>SensiAura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- Tela de Login -->
+<div class="login-box" id="login">
+  <img src="" alt="Foto de perfil" class="profile-img" />
+  <h2>Login</h2>
+  <input type="password" placeholder="Digite sua Key" id="senha" />
+  <button onclick="entrar()">Entrar</button>
+</div>
+
+<!-- Painel Principal -->
+<div class="panel" id="painel" style="display:none;">
+  <h2>AUXILIO BY SENSIAURA</h2>
+  <div class="tab-buttons">
+    <button class="active" onclick="showTab('aimbot', event)">Aimbot</button>
+    <button onclick="showTab('info', event)">Info</button>
+  </div>
+
+  <div class="tab-content" id="aimbot">
+    <label><input type="checkbox" /> Activar FPS</label>
+    <label><input type="checkbox" /> Activar  Precision</label>
+
+    <div class="slider-container">
+      <input
+        type="range"
+        min="0"
+        max="10"
+        value="0"
+        oninput="document.getElementById('val').innerText = this.value"
+      />
+      <span>Precisão <span id="val">0</span></span>
+    </div>
+
+    <select>
+      <option>Auxílio Head</option>
+      <option>Auxílio cuello</option>
+      <option>Auxílio HS </option>
+    </select>
+
+    <button>INJETAR FUNCIONES EN EL JUEGO </button>
+  </div>
+
+  <div class="tab-content" id="info" style="display:none;">
+    <p>Desenvolvido por @SensiAura</p>
+    <p>Mejor sensibilidade para mira precisa.</p>
+  </div>
+</div>
+
+<div class="copyright">© 2026 SensiAura</div>
+
+<script>
+  function entrar() {
+    const senha = document.getElementById("senha").value;
+    if (senha === "SensiAURA-AUX-MIRA-V2SX") {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("painel").style.display = "block";
+    } else {
+      alert("Senha incorreta!");
+    }
+  }
+
+  function showTab(tab, evt) {
+    document.querySelectorAll(".tab-content").forEach((div) => {
+      div.style.display = "none";
+    });
+    document.querySelectorAll(".tab-buttons button").forEach((btn) => {
+      btn.classList.remove("active");
+    });
+    document.getElementById(tab).style.display = "block";
+    evt.target.classList.add("active");
+  }
+
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let points = [];
+  for (let i = 0; i < 100; i++) {
+    points.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < points.length; i++) {
+      let p1 = points[i];
+      p1.x += p1.vx;
+      p1.y += p1.vy;
+
+      if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
+      if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
+
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p1.x + 5, p1.y + 10);
+      ctx.lineTo(p1.x - 5, p1.y + 10);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(255,0,0,0.6)";
+      ctx.fill();
+
+      for (let j = i + 1; j < points.length; j++) {
+        let p2 = points[j];
+        let dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = "rgba(255,0,0,0.3)";
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+
+</body>
+</html>
